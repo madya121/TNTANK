@@ -27,11 +27,13 @@ public:
     frameCountdown = 375;
 
     isWin = false;
+    isLose = false;
   }
   
   void Load(ArduEngine &engine) {
     countdown->isEnabled = false;
     isWin = false;
+    isLose = false;
     
     InitializeMap();
     TraverseMap(0, 0);
@@ -58,7 +60,8 @@ public:
     }
 
     checkWin(engine);
-    if (isWin)
+    checkLose(engine);
+    if (isWin || isLose)
       return;
       
     handleInput(engine);
@@ -78,7 +81,7 @@ private:
   int8_t finishX, finishY;
   int16_t frameCountdown;
   ArduText *countdown;
-  bool isWin;
+  bool isWin, isLose;
 
   void DrawCountdown(ArduEngine &engine) {
     countdown->isEnabled = true;
@@ -222,10 +225,23 @@ private:
   }
 
   void checkWin(ArduEngine &engine) {
+    
     if (1 + (finishX * 16) == tank->nextY && 1 + (finishY * 16) == tank->nextX) {
       isWin = true;
       if (1 + (finishX * 16) == tank->currY && 1 + (finishY * 16) == tank->currX) {
-        engine.SetScene(GAME_SCENE_ID);
+        engine.SetScene(WIN_SCENE_ID);
+      }
+    }
+  }
+
+  void checkLose(ArduEngine &engine) {
+    int16_t decodeNextX = (tank->nextY - 1) / 16;
+    int16_t decodeNextY = (tank->nextX - 1) / 16;
+
+    if (playMap[decodeNextX][decodeNextY] == -1) {
+      isLose = true;
+      if (1 + (decodeNextX * 16) == tank->currY && 1 + (decodeNextY * 16) == tank->currX) {
+        engine.SetScene(GAME_OVER_SCENE_ID);
       }
     }
   }

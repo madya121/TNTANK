@@ -12,6 +12,8 @@
 // Scene
 #include "MainMenu.cpp"
 #include "GameScene.cpp"
+#include "GameOverScene.cpp"
+#include "WinScene.cpp"
 
 Arduboy2 arduboy;
 ArduboyTones sound(arduboy.audio.enabled);
@@ -20,14 +22,18 @@ ArduEngine *arduEngine = new ArduEngine(arduboy);
 // Scene Declaration
 MainMenu *mainMenu;
 GameScene *gameScene;
+GameOverScene *gameOverScene;
+WinScene *winScene;
 
 void InitializeScenes()
 {
 	// Initialize Scene
 	mainMenu = new MainMenu(*arduEngine, MAIN_MENU_SCENE_ID);
   gameScene = new GameScene(*arduEngine, GAME_SCENE_ID);
+  gameOverScene = new GameOverScene(*arduEngine, GAME_OVER_SCENE_ID);
+  winScene = new WinScene(*arduEngine, WIN_SCENE_ID);
 
-	arduEngine->SetScene(GAME_SCENE_ID);
+	arduEngine->SetScene(MAIN_MENU_SCENE_ID);
 }
 
 void setup()
