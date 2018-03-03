@@ -19,6 +19,8 @@ public:
   }
   
   void Run(ArduEngine &engine) {
+    engine.arduboy->drawBitmap(0, 0, win_image, 128, 64, WHITE);
+    
     frame += 2;
 
     engine.arduboy->fillRect(0, 56, frame, 8, WHITE);
