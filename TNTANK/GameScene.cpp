@@ -28,12 +28,17 @@ public:
 
     isWin = false;
     isLose = false;
+
+    blowingUp = false;
+
+    blowUpFrame = 60;
   }
   
   void Load(ArduEngine &engine) {
     countdown->isEnabled = false;
     isWin = false;
     isLose = false;
+    blowingUp = false;
     
     InitializeMap();
     TraverseMap(0, 0);
@@ -42,6 +47,8 @@ public:
     GetFinishPoint();
     
     frameCountdown = 375;
+
+    blowUpFrame = 60;
   }
   
   void Run(ArduEngine &engine) {
@@ -61,6 +68,8 @@ public:
 
     checkWin(engine);
     checkLose(engine);
+    if (blowingUp)
+      drawTNTExcept(engine, locationLoseX, locationLoseY);
     if (isWin || isLose)
       return;
       
@@ -82,6 +91,9 @@ private:
   int16_t frameCountdown;
   ArduText *countdown;
   bool isWin, isLose;
+  int8_t locationLoseX, locationLoseY;
+  bool blowingUp;
+  uint8_t blowUpFrame;
 
   void DrawCountdown(ArduEngine &engine) {
     countdown->isEnabled = true;
@@ -209,9 +221,6 @@ private:
       tank->Down();
     if (engine.arduboy->justPressed(LEFT_BUTTON))
       tank->Left();
-
-    // if (engine.arduboy->justPressed(A_BUTTON))
-    //   engine.SetScene(GAME_SCENE_ID);
   }
 
   void drawTNT(ArduEngine &engine) {
@@ -224,8 +233,27 @@ private:
     }
   }
 
-  void checkWin(ArduEngine &engine) {
+  void drawTNTExcept(ArduEngine &engine, int8_t _i, int8_t _j) {
+    blowUpFrame--;
+    if (blowUpFrame == 0) {
+      engine.SetScene(GAME_OVER_SCENE_ID);
+    }
     
+    for (int8_t i = 0; i < 4; i++) {
+      for (int8_t j = 0; j < 8; j++) {
+        if (playMap[i][j] == -1) {
+          if (i == _i && j == _j) {
+            engine.arduboy->fillRect(1 + j * 16, 1 + i * 16, 14, 14, WHITE);
+            engine.arduboy->drawBitmap(1 + j * 16, 1 + i * 16, tnt_image, 14, 14, BLACK);
+          } else {
+            engine.arduboy->drawBitmap(1 + j * 16, 1 + i * 16, tnt_image, 14, 14, WHITE);
+          }
+        }
+      }
+    }
+  }
+
+  void checkWin(ArduEngine &engine) {
     if (1 + (finishX * 16) == tank->nextY && 1 + (finishY * 16) == tank->nextX) {
       isWin = true;
       if (1 + (finishX * 16) == tank->currY && 1 + (finishY * 16) == tank->currX) {
@@ -235,13 +263,18 @@ private:
   }
 
   void checkLose(ArduEngine &engine) {
+    if (blowingUp)
+      return;
+    
     int16_t decodeNextX = (tank->nextY - 1) / 16;
     int16_t decodeNextY = (tank->nextX - 1) / 16;
 
     if (playMap[decodeNextX][decodeNextY] == -1) {
       isLose = true;
+      locationLoseX = decodeNextX;
+      locationLoseY = decodeNextY;
       if (1 + (decodeNextX * 16) == tank->currY && 1 + (decodeNextY * 16) == tank->currX) {
-        engine.SetScene(GAME_OVER_SCENE_ID);
+        blowingUp = true;
       }
     }
   }

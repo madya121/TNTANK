@@ -15,13 +15,13 @@ public:
   
   void Load(ArduEngine &engine) {
     frame = 0;
-    engine.arduboy->digitalWriteRGB(RGB_ON, RGB_OFF, RGB_OFF);
+    // engine.arduboy->digitalWriteRGB(RGB_ON, RGB_OFF, RGB_OFF);
   }
   
   void Run(ArduEngine &engine) {
     engine.arduboy->drawBitmap(0, 0, game_over, 128, 64, WHITE);
     
-    frame += 2;
+    frame += 1;
 
     engine.arduboy->fillRect(0, 56, frame, 8, WHITE);
     if (frame == 128) {
@@ -30,7 +30,7 @@ public:
   }
   
   void Destroy(ArduEngine &engine) {
-    engine.arduboy->digitalWriteRGB(RGB_OFF, RGB_OFF, RGB_OFF);
+    // engine.arduboy->digitalWriteRGB(RGB_OFF, RGB_OFF, RGB_OFF);
   }
 
 private:
