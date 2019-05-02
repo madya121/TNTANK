@@ -1,32 +1,35 @@
 #ifndef MainMenu_CPP
 #define MainMenu_CPP
 
-#include "ArduEngine/ArduEngine.h"
+#include "../ArduEngine/ArduEngine.h"
 
-#include "Images.h"
-#include "SceneID.h"
+#include "../Images.h"
+#include "../SceneManager.cpp"
 
 #define TIME_BLINK 40;
 
-class MainMenu : public ArduScene {
+class MainMenu : public ArduScene
+{
 public:
-
-  MainMenu(ArduEngine &engine, uint8_t sceneID) : ArduScene(sceneID, engine) {
-    background = new ArduSprite(0, 0, 128, 64, WHITE, main_menu, engine);
+	MainMenu(ArduEngine &engine, uint8_t sceneID) : ArduScene(sceneID, engine)
+	{
+		background = new ArduSprite(0, 0, 128, 64, WHITE, main_menu, engine);
     background->isEnabled = false;
     
     frame = TIME_BLINK;
     showText = true;
-  }
-  
-  void Load(ArduEngine &engine) {
-    background->isEnabled = true;
+	}
+	
+	void Load(ArduEngine &engine)
+	{
+		background->isEnabled = true;
     frame = TIME_BLINK;
     showText = true;
-  }
-  
-  void Run(ArduEngine &engine) {
-    handleInput(engine);
+	}
+	
+	void Run(ArduEngine &engine)
+	{
+		handleInput(engine);
     addText(engine);
 
     frame--;
@@ -34,11 +37,13 @@ public:
       showText ^= true;
       frame = TIME_BLINK;
     }
-  }
-  
-  void Destroy(ArduEngine &engine) {
-    background->isEnabled = false;
-  }
+	}
+	
+	void Destroy(ArduEngine &engine)
+	{
+		background->isEnabled = false;
+	}
+	
 
 private:
   ArduSprite *background;
@@ -61,6 +66,5 @@ private:
     }
   }
 };
-
 
 #endif

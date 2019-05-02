@@ -6,38 +6,15 @@
 #include "ArduEngine/ArduText.cpp"
 #include "ArduEngine/ArduEngine.cpp"
 
-#include "Images.h"
-#include "SceneID.h"
+#include "SceneManager.cpp"
 
-// Scene
-#include "MainMenu.cpp"
-#include "GameScene.cpp"
-#include "GameOverScene.cpp"
-#include "WinScene.cpp"
-#include "SplashScreenScene.cpp"
+#include "Images.h"
 
 Arduboy2 arduboy;
 ArduboyTones sound(arduboy.audio.enabled);
 ArduEngine *arduEngine = new ArduEngine(arduboy);
 
-// Scene Declaration
-MainMenu *mainMenu;
-GameScene *gameScene;
-GameOverScene *gameOverScene;
-WinScene *winScene;
-SplashScreenScene *splashScreenScene;
-
-void InitializeScenes()
-{
-	// Initialize Scene
-	mainMenu = new MainMenu(*arduEngine, MAIN_MENU_SCENE_ID);
-  gameScene = new GameScene(*arduEngine, GAME_SCENE_ID);
-  gameOverScene = new GameOverScene(*arduEngine, GAME_OVER_SCENE_ID);
-  winScene = new WinScene(*arduEngine, WIN_SCENE_ID);
-  splashScreenScene = new SplashScreenScene(*arduEngine, SPLASH_SCRENE_SCENE_ID);
-
-	arduEngine->SetScene(SPLASH_SCRENE_SCENE_ID);
-}
+SceneManager *sceneManager = new SceneManager(*arduEngine);
 
 void setup()
 {
@@ -45,7 +22,7 @@ void setup()
 	arduboy.setFrameRate(60);
 	arduboy.initRandomSeed();
 
-	InitializeScenes();
+	arduEngine->SetScene(SPLASH_SCREEN_SCENE_ID);
 }
 
 void loop()

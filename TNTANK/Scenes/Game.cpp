@@ -1,21 +1,22 @@
-#ifndef GameScene_CPP
-#define GameScene_CPP
+#ifndef Game_CPP
+#define Game_CPP
 
-#include "ArduEngine/ArduEngine.h"
+#include "../ArduEngine/ArduEngine.h"
 
-#include "Images.h"
-#include "SceneID.h"
+#include "../Images.h"
+#include "../SceneManager.cpp"
 
-#include "Tank.cpp"
+#include "../Tank.cpp"
 
 const int X4[4] = {0, 1, 0, -1};
 const int Y4[4] = {1, 0, -1, 0};
 
-class GameScene : public ArduScene {
-  
+class Game : public ArduScene
+{
 public:
-  GameScene(ArduEngine &engine, uint8_t sceneID) : ArduScene(sceneID, engine) {
-    tank = new Tank(engine);
+	Game(ArduEngine &engine, uint8_t sceneID) : ArduScene(sceneID, engine)
+	{
+		tank = new Tank(engine);
     tank->SetEnabled(false);
     
     flag = new ArduSprite(80, 48, 16, 16, WHITE, flag_image, engine);
@@ -26,19 +27,20 @@ public:
 
     frameCountdown = 375;
 
-    isWin = false;
+    isWin  = false;
     isLose = false;
 
     blowingUp = false;
 
     blowUpFrame = 60;
-  }
-  
-  void Load(ArduEngine &engine) {
-    countdown->isEnabled = false;
-    isWin = false;
-    isLose = false;
-    blowingUp = false;
+	}
+	
+	void Load(ArduEngine &engine)
+	{
+		countdown->isEnabled = false;
+    isWin                = false;
+    isLose               = false;
+    blowingUp            = false;
     
     InitializeMap();
     TraverseMap(0, 0);
@@ -49,21 +51,24 @@ public:
     frameCountdown = 375;
 
     blowUpFrame = 60;
-  }
-  
-  void Run(ArduEngine &engine) {
-    drawBorder(engine);
+	}
+	
+	void Run(ArduEngine &engine)
+	{
+		drawBorder(engine);
 
     if (frameCountdown > 0) {
       drawTNT(engine);
       frameCountdown--;
       DrawCountdown(engine);
+      
       return;
     } else if (frameCountdown == 0) {
       tank->SetEnabled(true);
+      
       countdown->isEnabled = false;
-      flag->isEnabled = true;
-      frameCountdown = -1;
+      flag->isEnabled      = true;
+      frameCountdown       = -1;
     }
 
     checkWin(engine);
@@ -74,26 +79,29 @@ public:
       return;
       
     handleInput(engine);
-  }
-  
-  void Destroy(ArduEngine &engine) {
-    tank->SetEnabled(false);
-    flag->isEnabled = false;
+	}
+	
+	void Destroy(ArduEngine &engine)
+	{
+		tank->SetEnabled(false);
+    
+    flag->isEnabled      = false;
     countdown->isEnabled = false;
-  }
+	}
+	
 
 private:
-  Tank *tank;
+	Tank       *tank;
   ArduSprite *flag;
-  int8_t playMap[4][8];
-  int8_t startX, startY;
-  int8_t finishX, finishY;
-  int16_t frameCountdown;
-  ArduText *countdown;
-  bool isWin, isLose;
-  int8_t locationLoseX, locationLoseY;
-  bool blowingUp;
-  uint8_t blowUpFrame;
+  int8_t     playMap[4][8];
+  int8_t     startX, startY;
+  int8_t     finishX, finishY;
+  int16_t    frameCountdown;
+  ArduText   *countdown;
+  bool       isWin, isLose;
+  int8_t     locationLoseX, locationLoseY;
+  bool       blowingUp;
+  uint8_t    blowUpFrame;
 
   void DrawCountdown(ArduEngine &engine) {
     countdown->isEnabled = true;
@@ -140,8 +148,8 @@ private:
       int8_t B = random(0, 4);
       
       int8_t temp = dir[A];
-      dir[A] = dir[B];
-      dir[B] = temp;
+      dir[A]      = dir[B];
+      dir[B]      = temp;
     }
     
     for (int8_t i = 0; i < 4; i++) {
@@ -166,9 +174,10 @@ private:
       for (int8_t j = 0; j < 8; j++) {
         road += (playMap[i][j] == 0);
         if (road == selectedIndex) {
-          startX = i;
-          startY = j;
+          startX        = i;
+          startY        = j;
           playMap[i][j] = 1;
+          
           return;
         }
       }

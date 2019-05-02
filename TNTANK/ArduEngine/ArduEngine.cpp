@@ -77,7 +77,7 @@ void ArduEngine::RegisterObject(ArduObject &object) {
       arrObject[i] = objects[i];
 
     delete[] objects;
-    
+
     objects = arrObject;
     currentObjectLimit += ARR_LIMIT;
   }
