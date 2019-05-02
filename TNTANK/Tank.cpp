@@ -7,9 +7,8 @@
 
 class Tank : public ArduObject {
   public:
-    Tank(ArduEngine &engine) {
+    Tank(ArduEngine &engine): ArduObject(engine) {
       tankSprite = new ArduSprite(1, 1, 14, 14, WHITE, tank_image_up, engine);
-      engine.RegisterObject(*this);
       
       enabled = true;
       
