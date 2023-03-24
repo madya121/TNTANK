@@ -16,22 +16,20 @@ ArduEngine *arduEngine = new ArduEngine(arduboy);
 
 SceneManager *sceneManager = new SceneManager(*arduEngine);
 
-void setup()
-{
-	arduboy.begin();
-	arduboy.setFrameRate(60);
-	arduboy.initRandomSeed();
+void setup() {
+    arduboy.begin();
+    arduboy.setFrameRate(60);
+    arduboy.initRandomSeed();
 
-	arduEngine->SetScene(SPLASH_SCREEN_SCENE_ID);
+    arduEngine->SetScene(SPLASH_SCREEN_SCENE_ID);
 }
 
-void loop()
-{
-	if (!(arduboy.nextFrame())) return;
-	arduboy.pollButtons();
-	arduboy.clear();
+void loop() {
+    if (!(arduboy.nextFrame())) return;
+    arduboy.pollButtons();
+    arduboy.clear();
 
-	arduEngine->Update(arduboy);
+    arduEngine->Update(arduboy);
 
-	arduboy.display();
+    arduboy.display();
 }
